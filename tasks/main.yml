@@ -1,0 +1,16 @@
+---
+- name: Install dependency tasks
+  include_tasks: install-dependency.yml
+  tags: ["consul"]
+  when: (ansible_os_family == "Debian")
+
+- name: Undeploy tasks
+  include_tasks: undeploy.yml
+  tags: ["consul"]
+  when: (redeploy_consul | default(false) | bool) or
+        (undeploy_consul | default(false) | bool)
+
+- name: Deploy tasks
+  include_tasks: deploy.yml
+  tags: ["consul"]
+  when: (not undeploy_consul | default(false) | bool)

@@ -1,0 +1,26 @@
+---
+- name: Gracefully leaves the Consul cluster and shuts down
+  command: docker exec "{{ container_name }}" sh -c 'consul leave'
+  ignore_errors: "yes"
+  register: leave_cluster
+  tags: ["consul"]
+
+- name: Leave info
+  debug:
+    var: leave_cluster.stdout
+
+- name: Remove docker container consul
+  register: remove_consul
+  tags: ["consul"]
+  when: (leave_cluster.changed)
+  docker_container:
+    name: "{{ container_name }}"
+    state: absent
+
+- name: Remove volumes for consul data
+  register: remove_volume
+  tags: ["consul"]
+  when: (remove_consul.changed)
+  docker_volume:
+    state: absent
+    name: "{{ container_name }}_data"

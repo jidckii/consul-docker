@@ -1,0 +1,27 @@
+---
+- name: Install host dependency and tools
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: "yes"
+  with_items:
+    - python-pip
+    - python3-pip
+    - python-requests
+    - python3-requests
+  tags: ["consul"]
+
+- name: Remove deprecated docker python lib
+  pip:
+    name: "docker"
+    state: absent
+  tags: ["consul"]
+
+- name: Install dependency python libs
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - docker-py
+    - python-consul
+  tags: ["consul"]

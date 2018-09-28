@@ -1,0 +1,37 @@
+---
+- name: Create volumes for consul data
+  tags: ["consul"]
+  docker_volume:
+    state: present
+    name: "{{ container_name }}_data"
+
+- name: Get my public IP
+  changed_when: (ipify_public_ip is not none)
+  ipify_facts:
+  register: get_public_ip
+  tags: ["consul"]
+  when: (consul_advertise_addr is none)
+
+- name: Set advertise_addr as public IP
+  changed_when: (consul_advertise_addr is not none)
+  tags: ["consul"]
+  when: get_public_ip.changed
+  set_fact:
+    consul_advertise_addr: "{{ipify_public_ip}}"
+
+- name: Install consul on docker container
+  tags: ["consul"]
+  docker_container:
+    command: "{{ container_command }}"
+    env:
+      CONSUL_LOCAL_CONFIG: "{{ consul_local_config | to_json }}"
+    image: "{{ container_image }}"
+    name: "{{ container_name }}"
+    pull: "{{ container_pull }}"
+    recreate: "{{ container_recreate }}"
+    restart: "{{ container_restart }}"
+    restart_policy: "{{ container_restart_policy }}"
+    state: "{{ container_state }}"
+    network_mode: "{{ container_network_mode }}"
+    volumes: "{{ container_volumes }} + [
+              '{{ container_name }}_data:/consul/data' ]"

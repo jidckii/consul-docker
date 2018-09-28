@@ -1,0 +1,29 @@
+---
+#####################
+### Role options
+#####################
+redeploy_consul: "no"
+undeploy_consul: "no"
+
+#####################
+### Container options
+#####################
+container_command: ["agent"]
+container_image_tag: "1.2.3"
+container_image: "consul:{{ container_image_tag }}"
+container_name: "consul"
+container_network_mode: "host"
+container_pull: "yes"
+container_recreate: "no"
+container_restart: "no"
+container_restart_policy: "always"
+container_state: "started"
+container_volumes: []
+
+#####################
+### Consul options
+#####################
+consul_advertise_addr:
+consul_bind_addr: "{{ansible_default_ipv4.address}}"
+consul_node_name: "{{ inventory_hostname }}"
+consul_retry_join:
