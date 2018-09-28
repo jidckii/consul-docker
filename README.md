@@ -1,4 +1,5 @@
 # Install consul agent in docker container  
+[![Build Status](https://travis-ci.org/jidckii/consul-docker.svg?branch=master)](https://travis-ci.org/jidckii/consul-docker)  
 #### Requirements  
 
 - Docker Engine  
