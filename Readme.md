@@ -1,4 +1,4 @@
-# Example for install consul agent in docker container  
+# Install consul agent in docker container  
 #### Requirements  
 
 - Docker Engine  
